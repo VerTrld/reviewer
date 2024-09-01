@@ -62,8 +62,8 @@ const EditPage = () => {
       console.error("Failed to save review:", error);
       alert("Failed to save review.");
     } finally {
-      form.reset();
       editor?.commands.setContent("");
+      form.reset();
     }
   });
 
