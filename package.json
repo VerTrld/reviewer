@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm install --frozen-lockfile && pnpm run clear-cache && next build && prisma generate",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "clear-cache": "rm -rf .pnpm-store"
+    "lint": "next lint"
   },
   "dependencies": {
     "@mantine/core": "^7.12.2",
