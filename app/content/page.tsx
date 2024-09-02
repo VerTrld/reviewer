@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -15,7 +16,7 @@ interface Review {
   ];
 }
 
-export default function Content() {
+function Content() {
   const searchparams = useSearchParams();
   const id = searchparams.get("id");
   const { data, error, isLoading } = useQuery({
@@ -26,7 +27,8 @@ export default function Content() {
     },
   });
 
-  console.log({ data });
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error: {error.message}</Text>;
 
   return (
     <>
@@ -36,5 +38,13 @@ export default function Content() {
         </Text>
       ))}
     </>
+  );
+}
+
+export default function ContentWrapper() {
+  return (
+    <Suspense fallback={<Text>Loading content...</Text>}>
+      <Content />
+    </Suspense>
   );
 }
