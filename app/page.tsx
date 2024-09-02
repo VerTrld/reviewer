@@ -1,9 +1,25 @@
 "use client";
 
-import { Box, Button, Flex, Stack, Text, UnstyledButton } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Card,
+  Flex,
+  Group,
+  Input,
+  Stack,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import {
+  IconIdBadge,
+  IconPencil,
+  IconTrash,
+  IconTrashFilled,
+} from "@tabler/icons-react";
 
 interface Review {
   reviews: [
@@ -41,42 +57,61 @@ export default function Home() {
 
   return (
     <>
-      <Flex direction={"column"} w={"100%"} h={"100vh"}>
-        <Flex
-          direction={"row"}
-          w={"100%"}
-          h={"100%"}
-          gap={20}
-          justify={"center"}
+      <Flex
+        direction={"column"}
+        w={"100%"}
+        mih={"100vh"}
+        bg={"#E7D4B5"}
+        justify={"center"}
+        gap={10}
+        p={10}
+      >
+        <Button onClick={() => push("/editor")} p={10}>
+          Add Reviewer
+        </Button>
+        <Input placeholder="search" />
+
+        <Box
+          p={10}
+          style={{ display: "flex", flex: 1, justifyContent: "center" }}
         >
-          <Button onClick={() => push("/editor")} p={10}>
-            Add Reviewer
-          </Button>
-          {data?.reviews.map((review, index) => (
-            <>
-              <Stack>
-                <Box
-                  w={100}
-                  h={100}
-                  style={{ border: "2px solid red" }}
-                  onClick={() => {
-                    push(`/content?id=${review.id}`);
-                  }}
+          <Group justify="center">
+            {data?.reviews.map((review, index) => (
+              <>
+                <Card
+                  shadow="sm"
+                  padding="sm"
+                  w={150}
+                  h={200}
+                  // style={{ border: "2px solid" }}
                 >
-                  <Text ta={"center"} key={index}>
-                    {review.title}
-                  </Text>
-                </Box>
-                <UnstyledButton
-                  ta={"center"}
-                  onClick={() => deleteSubmit(review.id)}
-                >
-                  delete
-                </UnstyledButton>
-              </Stack>
-            </>
-          ))}
-        </Flex>
+                  <Stack justify="space-between" flex={1} gap={0}>
+                    <Text fw={500} size="lg" mt="md" ta={"center"}>
+                      {review.title}
+                    </Text>
+
+                    <Group gap={0} justify="space-between">
+                      <Button
+                        flex={1}
+                        size="xs"
+                        onClick={() => {
+                          push(`/content?id=${review.id}`);
+                        }}
+                      >
+                        View
+                      </Button>
+                      <IconTrash
+                        color="red"
+                        cursor={"pointer"}
+                        onClick={() => deleteSubmit(review.id)}
+                      />
+                    </Group>
+                  </Stack>
+                </Card>
+              </>
+            ))}
+          </Group>
+        </Box>
       </Flex>
     </>
   );

@@ -68,7 +68,7 @@ const EditPage = () => {
   });
 
   return (
-    <Flex direction={"column"} w={"100%"} h={"100vh"}>
+    <Flex direction={"column"} w={"100%"} h={"100vh"} bg={"#E7D4B5"}>
       <form onSubmit={handleSubmit}>
         <RichTextEditor editor={editor}>
           <Flex direction={"row"} w={"100%"} justify={"end"} p={10} gap={10}>
@@ -84,7 +84,7 @@ const EditPage = () => {
           </Flex>
           <RichTextEditor.Toolbar
             sticky
-            bg={"blue"}
+            bg={"#536493"}
             style={{ justifyContent: "center" }}
           >
             <RichTextEditor.ControlsGroup>
@@ -120,7 +120,11 @@ const EditPage = () => {
           </RichTextEditor.Toolbar>
 
           <RichTextEditor.Content
-            style={{ minHeight: "70vh", border: "2px solid gray" }}
+            style={{
+              minHeight: "70vh",
+              border: "2px solid gray",
+              backgroundColor: "white", // Ensure the background is white
+            }}
           />
         </RichTextEditor>
       </form>
