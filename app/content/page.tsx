@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Text } from "@mantine/core";
+import { Flex, Paper, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
@@ -10,7 +10,7 @@ interface Review {
   reviews: [
     {
       id: string;
-      username: string;
+      title: string;
       content: string;
     }
   ];
@@ -32,11 +32,18 @@ function Content() {
 
   return (
     <>
-      {data?.map((review, index) => (
-        <Text key={index}>
-          <div dangerouslySetInnerHTML={{ __html: review.content }} />
-        </Text>
-      ))}
+      <Flex direction={"row"} mih={"100vh"} w={"100%"} justify={"center"}>
+        <Paper shadow="lg" p={10}>
+          {data?.map((review, index) => (
+            <>
+              <Title ta={"center"}>{review.title}</Title>
+              <Text>
+                <div dangerouslySetInnerHTML={{ __html: review.content }} />
+              </Text>
+            </>
+          ))}
+        </Paper>
+      </Flex>
     </>
   );
 }

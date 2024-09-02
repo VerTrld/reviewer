@@ -1,118 +1,75 @@
 "use client";
-
 import {
-  Box,
+  Anchor,
   Button,
-  Card,
-  Flex,
+  Checkbox,
+  Container,
   Group,
-  Input,
-  Stack,
+  Paper,
+  PasswordInput,
   Text,
-  UnstyledButton,
+  TextInput,
+  Title,
 } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import {
-  IconIdBadge,
-  IconPencil,
-  IconTrash,
-  IconTrashFilled,
-} from "@tabler/icons-react";
+import { InferType, object, string } from "yup";
+import { useForm, yupResolver } from "@mantine/form";
 
-interface Review {
-  reviews: [
-    {
-      id: string;
-      title: string;
-      content: string;
-    }
-  ];
-}
+import React from "react";
 
 export default function Home() {
-  const { push } = useRouter();
+  const schema = object({
+    username: string().required(),
+    password: string().required(),
+  });
 
-  const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["reviews"],
-    queryFn: async () => {
-      const { data } = await axios.get<Review>("/api/user");
-      return data;
+  type IInput = InferType<typeof schema>;
+
+  const form = useForm<IInput>({
+    validate: yupResolver(schema),
+    initialValues: {
+      username: "",
+      password: "",
     },
   });
 
-  const deleteSubmit = async (id: string) => {
-    try {
-      await axios.delete(`/api/user?id=${id}`);
-      refetch();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Axios Error:", error.response?.data);
-      } else {
-        console.error("Unexpected Error:", error);
-      }
-    }
-  };
-
+  const handleSubmit = form.onSubmit(async (values) => {
+    console.log({ values });
+  });
   return (
     <>
-      <Flex
-        direction={"column"}
-        w={"100%"}
-        mih={"100vh"}
-        bg={"#E7D4B5"}
-        justify={"center"}
-        gap={10}
-        p={10}
-      >
-        <Button onClick={() => push("/editor")} p={10}>
-          Add Reviewer
-        </Button>
-        <Input placeholder="search" />
+      <form onSubmit={handleSubmit}>
+        <Container size={420} my={40}>
+          <Title ta="center">Welcome back!</Title>
+          <Text c="dimmed" size="sm" ta="center" mt={5}>
+            Do not have an account yet?{" "}
+          </Text>
 
-        <Box
-          p={10}
-          style={{ display: "flex", flex: 1, justifyContent: "center" }}
-        >
-          <Group justify="center">
-            {data?.reviews.map((review, index) => (
-              <>
-                <Card
-                  shadow="sm"
-                  padding="sm"
-                  w={150}
-                  h={200}
-                  // style={{ border: "2px solid" }}
-                >
-                  <Stack justify="space-between" flex={1} gap={0}>
-                    <Text fw={500} size="lg" mt="md" ta={"center"}>
-                      {review.title}
-                    </Text>
-
-                    <Group gap={0} justify="space-between">
-                      <Button
-                        flex={1}
-                        size="xs"
-                        onClick={() => {
-                          push(`/content?id=${review.id}`);
-                        }}
-                      >
-                        View
-                      </Button>
-                      <IconTrash
-                        color="red"
-                        cursor={"pointer"}
-                        onClick={() => deleteSubmit(review.id)}
-                      />
-                    </Group>
-                  </Stack>
-                </Card>
-              </>
-            ))}
-          </Group>
-        </Box>
-      </Flex>
+          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+            <TextInput
+              label="Email"
+              placeholder="you@mantine.dev"
+              required
+              {...form.getInputProps("username")}
+            />
+            <PasswordInput
+              label="Password"
+              placeholder="Your password"
+              required
+              mt="md"
+              {...form.getInputProps("password")}
+            />
+            <Group justify="space-between" mt="lg">
+              <Checkbox label="Remember me" />
+              <Anchor component="button" size="sm">
+                Forgot password?
+              </Anchor>
+            </Group>
+            <Button fullWidth mt="xl" type="submit">
+              Sign in
+            </Button>
+          </Paper>
+        </Container>
+      </form>
     </>
   );
 }

@@ -13,6 +13,7 @@ import { useForm, yupResolver } from "@mantine/form";
 import axios from "axios";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { IconHomeFilled } from "@tabler/icons-react";
 
 const EditPage = () => {
   const editor = useEditor({
@@ -68,23 +69,26 @@ const EditPage = () => {
   });
 
   return (
-    <Flex direction={"column"} w={"100%"} h={"100vh"} bg={"#E7D4B5"}>
+    <Flex direction={"column"} w={"100%"} h={"100vh"} bg={"#F3F9D2"}>
       <form onSubmit={handleSubmit}>
         <RichTextEditor editor={editor}>
-          <Flex direction={"row"} w={"100%"} justify={"end"} p={10} gap={10}>
+          <Flex direction={"row"} w={"100%"} justify={"start"} p={10} gap={10}>
             <Button
+              bg={"#92B4A7"}
               onClick={() => {
                 push("/");
               }}
             >
-              Home
+              <IconHomeFilled />
             </Button>
-            <Button type="submit">Save</Button>
+            <Button bg={"#92B4A7"} type="submit">
+              Save
+            </Button>
             <Input placeholder="Title" {...form.getInputProps("title")} />
           </Flex>
           <RichTextEditor.Toolbar
             sticky
-            bg={"#536493"}
+            bg={"#92B4A7"}
             style={{ justifyContent: "center" }}
           >
             <RichTextEditor.ControlsGroup>
