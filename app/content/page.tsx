@@ -1,38 +1,50 @@
-"use client";
-
+// pages/content.tsx
+import { GetServerSideProps } from "next";
 import { Text } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useSearchParams } from "next/navigation";
 
 interface Review {
-  reviews: [
-    {
-      id: string;
-      username: string;
-      content: string;
-    }
-  ];
+  id: string;
+  username: string;
+  content: string;
 }
 
-export default function Content() {
-  const searchparams = useSearchParams();
-  const id = searchparams.get("id");
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["id", id],
-    queryFn: async () => {
-      const { data } = await axios.get<Review>("/api/user");
-      return data.reviews.filter((review) => review.id === id);
-    },
-  });
+interface ContentProps {
+  reviews: Review[];
+}
 
-  console.log({ data });
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const id = context.query.id as string;
+
+  try {
+    const { data } = await axios.get<{ reviews: Review[] }>("/api/user");
+    const filteredReviews = data.reviews.filter((review) => review.id === id);
+
+    return {
+      props: {
+        reviews: filteredReviews,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return {
+      props: {
+        reviews: [],
+      },
+    };
+  }
+};
+
+export default function Content({ reviews }: ContentProps) {
+  if (reviews.length === 0) {
+    return <div>No reviews found</div>;
+  }
 
   return (
     <>
-      {data?.map((review, index) => (
+      {reviews.map((review, index) => (
         <Text key={index}>
-          <div dangerouslySetInnerHTML={{ __html: review.content }} />
+          {<div dangerouslySetInnerHTML={{ __html: review.content }} />}
         </Text>
       ))}
     </>
